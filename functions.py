@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import shutil
-import Logger
+import Logging as Logger
 
 # Class to handle the database
 class Database:
@@ -31,14 +31,6 @@ class Database:
             print("Database was saved successfully.")
         except:
             print("Database was not saved.")
-
-    # Function to remove the database
-    def remove_db(db):
-        try:
-            os.remove(db)
-            print("Database was removed successfully.")
-        except:
-            print("Database was not removed.")
         
     # Function to clear the database
     def clear_db(db):
