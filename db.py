@@ -5,13 +5,13 @@ import shutil
 import functions
 
 
-__path__ = "C:/Users/Theo Boucebaine/Desktop/Projet_Python"
+db_path = "C:/Users/Theo Boucebaine/Desktop/Projet_Python"
 source = "data.db"
 destination = "C:/Users/Theo Boucebaine/Desktop/Projet_Python/save/data.db"
 
 
 # Check if the database exists in the specified path
-database = os.path.exists(__path__)
+database = os.path.exists(db_path)
 
 if database == True:
     time.sleep(1)
