@@ -1,8 +1,8 @@
 import sqlite3
 import os
 import time
-import shutil
 import functions
+
 
 
 __path__ = "C:/Users/Theo Boucebaine/Desktop/Projet_Python"

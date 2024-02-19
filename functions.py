@@ -17,12 +17,14 @@ class Database:
         create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)})"
         self.cursor.execute(create_table_query)
         self.conn.commit()
+        self.logger.log(f"The table {table_name} was created successfully.")
 
     # Function to iclear a table in the database
     def clear_table(self, table_name):
         clear_table_query = f"DELETE FROM {table_name}"
         self.cursor.execute(clear_table_query)
         self.conn.commit()
+        self.logger.log(f"The table {table_name} was cleared successfully.")
 
     # Function to save the database
     def save_db(source, destination):
