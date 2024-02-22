@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+
 from class_db import *
 
 class App:
@@ -71,9 +72,13 @@ class App:
 
     # Show the logs of the database in the right frame
     def show_logs(self):
-        vscode = ttk.Label(self.right_frame, text="Logs")
-        vscode.pack()
+        self.log_display = tk.Text(self.right_frame, height=30, width=80)
+        self.log_display.pack()
 
+    def append_log(self, log_entry):
+        self.log_display.insert(tk.END, log_entry + "\n")
+        self.log_display.see(tk.END)
+    
     def Menu(self):
         pass
 
