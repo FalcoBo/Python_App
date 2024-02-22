@@ -1,4 +1,4 @@
-tkinter
+tkinter as tk
 os
 sqlite3
 shutil

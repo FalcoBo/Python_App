@@ -1,10 +1,12 @@
-from functions import *
+from class_db import *
 from app import *
+from tkinter import Tk
 
 # Main function
 def main():
-    app = App()
-    app.mainloop()
+    root = Tk()
+    app = App(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()

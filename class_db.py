@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import shutil
-import Logging as Logger
+from logging import Logger
 
 # Class to handle the database
 class Database:
@@ -10,7 +10,7 @@ class Database:
         self.db = db
         self.connection = sqlite3.connect(self.db)
         self.cursor = self.connection.cursor()
-        self.logger = Logger.Logger()
+        self.logger = Logger(name="Database_Logger")
 
     # Function to create a table in the database
     def create_table(self, table_name, columns):
@@ -25,6 +25,12 @@ class Database:
         self.cursor.execute(clear_table_query)
         self.conn.commit()
         self.logger.log(f"The table {table_name} was cleared successfully.")
+
+    # Function to choose the database
+    def choose_db(self, db):
+        self.connection = sqlite3.connect(db)
+        self.cursor = self.connection.cursor()
+        self.logger.log(f"The database {db} was chosen successfully.")
 
     # Function to save the database
     def save_db(source, destination):
