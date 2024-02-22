@@ -8,7 +8,6 @@ db_path = "C:/Users/Theo Boucebaine/Desktop/Projet_Python"
 source = "data.db"
 destination = "C:/Users/Theo Boucebaine/Desktop/Projet_Python/save/data.db"
 
-
 # Check if the database exists in the specified path
 database = os.path.exists(db_path)
 

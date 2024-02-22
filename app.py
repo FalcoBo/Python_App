@@ -3,69 +3,79 @@ from tkinter import ttk
 from class_db import *
 
 class App:
+    # INITIALIZE
     def __init__(self, root):
         self.root = root
         self.root.title("My Application")
         self.root.geometry("900x650")
 
+        # Initialise the Class Database 
+        self.class_db = Database
+
         # Set background color to black
-        self.root.configure(background="black")
+        self.root.configure(background="#2D2A4A")
 
-        # Create a frame for the left part
-        self.left_frame = ttk.Frame(self.root, width=500, height=800, relief=tk.RIDGE)
-        self.left_frame.pack(side=tk.LEFT, padx=10, pady=10)
-        self.left_frame.configure(borderwidth=15)
+        # Create the left and right frames
+        self.left_frame()
+        self.right_frame()
 
-        # Create a frame for the right part
-        self.right_frame = ttk.Frame(self.root, width=200, height=400, relief=tk.RIDGE)
-        self.right_frame.pack(side=tk.RIGHT, padx=10, pady=10)
-
-        # Add widgets to the left frame
-        self.label_left = ttk.Label(self.left_frame, text="Left Part", foreground="blue")  # Set font color to blue
-        self.label_left.pack(pady=10)
-
-        self.button_left = ttk.Button(self.left_frame, text="Button in Left Part")
-        self.button_left.pack()
-
-        # Add widgets to the right frame
-        self.label_right = ttk.Label(self.right_frame, text="Right Part", foreground="blue")  # Set font color to blue
-        self.label_right.pack(pady=10)
-
-        self.button_right = ttk.Button(self.right_frame, text="Button in Right Part")
-        self.button_right.pack()
+        # Create the buttons on the left frame
+        self.button_left(self.class_db)
 
         # Create a menu
         self.menu = tk.Menu(self.root)
         self.root.config(menu=self.menu)
 
-        # Create 'File' menu
-        file_menu = tk.Menu(self.menu, tearoff=False)
-        file_menu.add_command(label="Exit", command=root.quit)
-        self.menu.add_cascade(label="File", menu=file_menu)
-
-        # Create 'Help' menu
+        # 'Help' menu
         help_menu = tk.Menu(self.menu, tearoff=False)
         help_menu.add_command(label="About", command=self.about)
         self.menu.add_cascade(label="Help", menu=help_menu)
 
-        file_menu = tk.Menu(self.menu, tearoff=False)
-        file_menu.add_command(label="Save Database", command=self.save_database)
-        file_menu.add_command(label="Clear Database", command=self.clear_database)
-        file_menu.add_command(label="Close Database", command=self.close_database)
-        file_menu.add_command(label="Exit", command=root.quit)
-        self.menu.add_cascade(label="File", menu=file_menu)
+    # METHODES
 
-        # Initialize the database
-        self.class_db = Database("data.db")
+    # Methode to create the left frame
+    def left_frame(self):
+        self.left_frame = ttk.Frame(self.root, width=250, height=600, relief=tk.RIDGE)
+        self.left_frame.pack(side=tk.LEFT, padx=0, pady=0)
+
+    # Methode to create the right frame
+    def right_frame(self):
+        self.right_frame = ttk.Frame(self.root, width=1000, height=600, relief=tk.RIDGE)
+        self.right_frame.pack(side=tk.RIGHT, padx=0, pady=0)
+        self.show_logs()
+
+    # Methode to create the buttons on the left frame
+    def button_left(self, class_db):
+
+        class_db = self.class_db
+
+        # Button to create a database
+        self.button_left = ttk.Button(self.left_frame, text="Create a database")
+        self.button_left.pack()
+
+        # Choose a database
+        self.button_left = ttk.Button(self.left_frame, text="Choose a database", command=class_db.choose_db)
+        self.button_left.pack()
+
+        # Save the database
+        self.button_left = ttk.Button(self.left_frame, text="Save database", command=class_db.save_db)
+        self.button_left.pack()
+
+        # Clear the database
+        self.button_left = ttk.Button(self.left_frame, text="Clear the database", command=class_db.clear_table)
+        self.button_left.pack()
+
+        # Dowload data
+        self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=class_db.dowload_data)
+        self.button_left.pack()
+
+    # Show the logs of the database in the right frame
+    def show_logs(self):
+        vscode = ttk.Label(self.right_frame, text="Logs")
+        vscode.pack()
+
+    def Menu(self):
+        pass
 
     def about(self):
         pass
-
-    def save_database(self):
-        self.class_db.save_db()
-
-    def clear_database(self):
-        self.class_db.clear_db()
-
-    def close_database(self):
-        self.class_db.close_db()

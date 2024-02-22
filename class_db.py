@@ -52,6 +52,11 @@ class Database:
         except:
             print("Database was not cleared.")
 
+    # Methode to dowload the data in the database
+    def dowload_data(self):
+        pass
+
+
     # Function to close the database
     def close_db(self):
         self.connection.close()
