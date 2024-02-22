@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from class_db import *
 
 class App:
     def __init__(self, root):
@@ -47,15 +48,24 @@ class App:
         help_menu.add_command(label="About", command=self.about)
         self.menu.add_cascade(label="Help", menu=help_menu)
 
+        file_menu = tk.Menu(self.menu, tearoff=False)
+        file_menu.add_command(label="Save Database", command=self.save_database)
+        file_menu.add_command(label="Clear Database", command=self.clear_database)
+        file_menu.add_command(label="Close Database", command=self.close_database)
+        file_menu.add_command(label="Exit", command=root.quit)
+        self.menu.add_cascade(label="File", menu=file_menu)
+
+        # Initialize the database
+        self.class_db = Database("data.db")
+
     def about(self):
         pass
 
     def save_database(self):
-        pass
+        self.class_db.save_db()
 
     def clear_database(self):
-        pass
+        self.class_db.clear_db()
 
     def close_database(self):
-        pass
-    
+        self.class_db.close_db()
