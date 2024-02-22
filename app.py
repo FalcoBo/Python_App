@@ -49,3 +49,13 @@ class App:
 
     def about(self):
         pass
+
+    def save_database(self):
+        pass
+
+    def clear_database(self):
+        pass
+
+    def close_database(self):
+        pass
+    
