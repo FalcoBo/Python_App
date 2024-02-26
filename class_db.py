@@ -50,8 +50,8 @@ class Database:
             connection.close()
             self.logger.log("The database was cleared successfully.")
         except:
-            print("Database was not cleared.")
-
+            self.logger.log("The database was not cleared.")
+            
     # Methode to dowload the data in the database
     def dowload_data(self):
         pass
