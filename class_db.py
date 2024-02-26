@@ -33,22 +33,22 @@ class Database:
         self.logger.log(f"The database {db} was chosen successfully.")
 
     # Function to save the database
-    def save_db(source, destination):
+    def save_db(self, source, destination):
         try:
             shutil.copy(source, destination)
-            print("Database was saved successfully.")
+            self.logger.log(f"The database was saved successfully.")
         except:
-            print("Database was not saved.")
+            self.logger.log(f"The database was not saved.")
         
     # Function to clear the database
-    def clear_db(db):
+    def clear_db(self,db):
         try:
             connection = sqlite3.connect(db)
             cursor = connection.cursor()
             cursor.execute('DELETE FROM users')
             connection.commit()
             connection.close()
-            print("Database was cleared successfully.")
+            self.logger.log("The database was cleared successfully.")
         except:
             print("Database was not cleared.")
 
