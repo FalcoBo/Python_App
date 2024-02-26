@@ -1,7 +1,7 @@
 import sqlite3
 import os
 import time
-import class_db
+import Database
 
 
 db_path = "C:/Users/Theo Boucebaine/Desktop/Projet_Python"
@@ -34,7 +34,7 @@ if database == True:
         connection.close()
         print('The connection to the database was closed successfully.')
 
-        class_db.save_db(source, destination)
+        Database.save_db(source, destination)
 
     except sqlite3.Error:
         print("The connection to the database failed.")

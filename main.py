@@ -1,4 +1,4 @@
-from class_db import *
+from Database import *
 from app import *
 from tkinter import Tk
 

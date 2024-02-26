@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
-from class_db import *
+from Database import *
 
 class App:
     # INITIALIZE
@@ -11,7 +10,7 @@ class App:
         self.root.geometry("900x650")
 
         # Initialise the Class Database 
-        self.class_db = Database
+        self.database = Database
 
         # Set background color to black
         self.root.configure(background="#2D2A4A")
@@ -21,7 +20,7 @@ class App:
         self.right_frame()
 
         # Create the buttons on the left frame
-        self.button_left(self.class_db)
+        self.button_left(self.database)
 
         # Create a menu
         self.menu = tk.Menu(self.root)
@@ -46,28 +45,28 @@ class App:
         self.show_logs()
 
     # Methode to create the buttons on the left frame
-    def button_left(self, class_db):
+    def button_left(self, database):
 
-        class_db = self.class_db
+        database = self.database
 
         # Button to create a database
         self.button_left = ttk.Button(self.left_frame, text="Create a database")
         self.button_left.pack()
 
         # Choose a database
-        self.button_left = ttk.Button(self.left_frame, text="Choose a database", command=class_db.choose_db)
+        self.button_left = ttk.Button(self.left_frame, text="Choose a database", command=database.choose_db)
         self.button_left.pack()
 
         # Save the database
-        self.button_left = ttk.Button(self.left_frame, text="Save database", command=class_db.save_db)
+        self.button_left = ttk.Button(self.left_frame, text="Save database", command=database.save_db)
         self.button_left.pack()
 
         # Clear the database
-        self.button_left = ttk.Button(self.left_frame, text="Clear the database", command=class_db.clear_table)
+        self.button_left = ttk.Button(self.left_frame, text="Clear the database", command=database.clear_table)
         self.button_left.pack()
 
         # Dowload data
-        self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=class_db.dowload_data)
+        self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=database.dowload_data)
         self.button_left.pack()
 
     # Show the logs of the database in the right frame
