@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from Database import *
+import logging
 
 class App:
     # INITIALIZE
@@ -9,8 +10,9 @@ class App:
         self.root.title("My Application")
         self.root.geometry("900x650")
 
-        # Initialise the Class Database 
-        self.database = Database
+        # Initialise the Class Database
+        self.database = Database()
+        self.db_path = None
 
         # Set background color to black
         self.root.configure(background="#2D2A4A")
@@ -62,11 +64,11 @@ class App:
         self.button_left.pack()
 
         # Clear the database
-        self.button_left = ttk.Button(self.left_frame, text="Clear the database", command=database.clear_table)
+        self.button_left = ttk.Button(self.left_frame, text="Clear the database", command=database.clear_db)
         self.button_left.pack()
 
         # Dowload data
-        self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=database.dowload_data)
+        # self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=database.dowload_data)
         self.button_left.pack()
 
     # Show the logs of the database in the right frame
