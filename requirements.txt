@@ -1,7 +1,10 @@
 tkinter as tk
-os
 sqlite3
 shutil
-times
-Logger as Logger
+Logging as Logger
+Logging
 sys
+seaborn as sns
+matplotlib.pyplot as plt
+requests
+filedialog

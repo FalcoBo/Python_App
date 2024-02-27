@@ -1,10 +1,8 @@
-import os
 import sqlite3
 import shutil
 from tkinter import filedialog
 import logging
 import requests
-import json
 from logging import Logger
 
 
@@ -87,6 +85,30 @@ class Database:
             self.logger.error(f"An error occurred while downloading the data from {json_url}.")
         except ValueError:
             self.logger.error(f"The data from {json_url} is not in the expected format.")
+
+    def drop_table(self, table_name):
+        try:
+            drop_table_query = f"DROP TABLE IF EXISTS {table_name}"
+            self.cursor.execute(drop_table_query)
+            self.connection.commit()
+            self.logger.info(f"The table {table_name} was dropped successfully.")
+        except ValueError:
+            self.logger.error(f"None of the tables in the database match the name {table_name}.")
+        except FileNotFoundError:
+            self.logger.error(f"The file {self.db_path} was not found.")
+
+    def drop_all_tables(self):
+        try:
+            self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = self.cursor.fetchall()
+            for table in tables:
+                table_name = table[0]
+                drop_table_query = f"DROP TABLE IF EXISTS {table_name}"
+                self.cursor.execute(drop_table_query)
+            self.connection.commit()
+            self.logger.info("All tables in the database were dropped successfully.")
+        except FileNotFoundError:
+            self.logger.error(f"The file {self.db_path} was not found.")
 
     # Function to close the database
     def close_db(self):

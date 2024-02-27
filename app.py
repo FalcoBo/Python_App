@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from Database import *
-import logging
 
 class App:
     # INITIALIZE
@@ -23,8 +22,6 @@ class App:
 
         # Create the buttons on the left frame
         self.button_left(self.database)
-
-        self.table_name_entry()
 
         # Source and destination of the database
         self.source = None
@@ -63,13 +60,33 @@ class App:
         # Clear the database
         self.button_left = ttk.Button(self.left_frame, text="Clear the database", command=database.clear_db)
         self.button_left.pack()
+        self.table_name_entry_to_clear()
 
         # Dowload data
         self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=self.download_data)
         self.button_left.pack()
 
+        # Drop the table
+        self.button_left = ttk.Button(self.left_frame, text="Drop the table", command=self.drop_table)
+        self.button_left.pack()
+        self.table_name_entry_to_drop()
+
+        # Drop all tables
+        self.button_left = ttk.Button(self.left_frame, text="Drop all tables", command=database.drop_all_tables)
+        self.button_left.pack()
+
+        # Exit
+        self.button_left = ttk.Button(self.left_frame, text="Exit", command=self.root.quit)
+        self.button_left.pack()
+
     # Create the entry to enter the name of the table
-    def table_name_entry(self):
+    def table_name_entry_to_clear(self):
+        self.table_name = tk.StringVar()
+        self.table_name_entry = ttk.Entry(self.left_frame, textvariable=self.table_name)
+        self.table_name_entry.pack()
+
+    # Create the entry to enter the name of the table
+    def table_name_entry_to_drop(self):
         self.table_name = tk.StringVar()
         self.table_name_entry = ttk.Entry(self.left_frame, textvariable=self.table_name)
         self.table_name_entry.pack()
@@ -86,6 +103,10 @@ class App:
     def download_data(self):
         table_name = self.table_name.get()
         self.database.download_data(table_name)
+
+    def drop_table(self):
+        table_name = self.table_name.get()
+        self.database.drop_table(table_name)
 
     def Menu(self):
         pass
