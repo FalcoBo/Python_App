@@ -3,6 +3,8 @@ import sqlite3
 import shutil
 from tkinter import filedialog
 import logging
+import requests
+import json
 from logging import Logger
 
 
@@ -66,11 +68,30 @@ class Database:
             self.logger.error(f"Error while saving the database: {str(e)}")
             
     # Method to download the data in the database
-    def download_data(self):
-        # Implement your download logic here
-        pass
+    def download_data(self, table_name):
+        json_url = "https://jsonplaceholder.typicode.com/posts"
+        try:
+            response = requests.get(json_url)
+            data = response.json()
+            columns = list(data[0].keys())
+            self.create_table(table_name, columns)
+            for row in data:
+                values = list(row.values())
+                insert_query = f"INSERT INTO {table_name} VALUES ({', '.join(['?'] * len(values))})"
+                self.cursor.execute(insert_query, values)
+            self.connection.commit()
+            self.logger.info(f"The data from {json_url} was downloaded and stored in the database successfully.")
+        except FileNotFoundError:
+            self.logger.error(f"The Database file {self.db_path} was not found.")
+        except requests.exceptions.RequestException:
+            self.logger.error(f"An error occurred while downloading the data from {json_url}.")
+        except ValueError:
+            self.logger.error(f"The data from {json_url} is not in the expected format.")
 
     # Function to close the database
     def close_db(self):
-        self.connection.close()
-        self.logger.info("The connection to the database was closed successfully.")
+        try:
+            self.connection.close()
+            self.logger.info("The connection to the database was closed successfully.")
+        except FileNotFoundError:
+            self.logger.error(f"The file {self.db_path} was not found.")

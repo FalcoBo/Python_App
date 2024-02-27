@@ -14,7 +14,7 @@ class App:
         self.database = Database()
         self.db_path = None
 
-        # Set background color to black
+        # Set background color
         self.root.configure(background="#2D2A4A")
 
         # Create the left and right frames
@@ -24,14 +24,11 @@ class App:
         # Create the buttons on the left frame
         self.button_left(self.database)
 
-        # Create a menu
-        self.menu = tk.Menu(self.root)
-        self.root.config(menu=self.menu)
+        self.table_name_entry()
 
-        # 'Help' menu
-        help_menu = tk.Menu(self.menu, tearoff=False)
-        help_menu.add_command(label="About", command=self.about)
-        self.menu.add_cascade(label="Help", menu=help_menu)
+        # Source and destination of the database
+        self.source = None
+        self.destination = self.db_path
 
     # METHODES
 
@@ -68,8 +65,14 @@ class App:
         self.button_left.pack()
 
         # Dowload data
-        # self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=database.dowload_data)
+        self.button_left = ttk.Button(self.left_frame, text="Dowload data", command=self.download_data)
         self.button_left.pack()
+
+    # Create the entry to enter the name of the table
+    def table_name_entry(self):
+        self.table_name = tk.StringVar()
+        self.table_name_entry = ttk.Entry(self.left_frame, textvariable=self.table_name)
+        self.table_name_entry.pack()
 
     # Show the logs of the database in the right frame
     def show_logs(self):
@@ -80,6 +83,10 @@ class App:
         self.log_display.insert(tk.END, log_entry + "\n")
         self.log_display.see(tk.END)
     
+    def download_data(self):
+        table_name = self.table_name.get()
+        self.database.download_data(table_name)
+
     def Menu(self):
         pass
 
