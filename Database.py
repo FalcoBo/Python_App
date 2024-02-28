@@ -24,12 +24,21 @@ class Database:
         self.logger.addHandler(ch)
 
     # Function to create a table in the database
-    def create_table(self, table_name, columns):
-        create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)})"
-        self.cursor.execute(create_table_query)
-        self.connection.commit()
-        self.logger.info(f"The table {table_name} was created successfully.")
-
+    def create_table(self, table_name):
+        try:
+            if self.table_exists(table_name):
+                self.logger.warning(f"The table {table_name} already exists.")
+                return
+            columns = ["taille", "nom", "etat", "longueur"]
+            create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ("
+            create_table_query += ", ".join([f"{column} TEXT" for column in columns])
+            create_table_query += ")"
+            self.cursor.execute(create_table_query)
+            self.connection.commit()
+            self.logger.info(f"The table {table_name} was created successfully.")
+        except Exception as e:
+            self.logger.error(f"Error while creating the table {table_name}: {str(e)}")
+        
     # Function to clear all tables in the database
     def clear_db(self):
         try:

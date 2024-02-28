@@ -1,10 +1,10 @@
-tkinter as tk
-sqlite3
-shutil
-Logging as Logger
-Logging
-sys
-seaborn as sns
-matplotlib.pyplot as plt
-requests
-filedialog
+tkinter==8.6
+sqlite3==3.33.0
+shutil==3.3.0
+Logging==0.5.1.2
+sys==3.3.0
+seaborn==0.11.1
+matplotlib.pyplot==3.3.0
+requests==2.25.1
+filedialog==3.3.0
+requests==2.25.1
