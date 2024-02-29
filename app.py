@@ -28,14 +28,13 @@ class App:
         ttk.Button(self.left_frame, text="Create a database").pack(pady=5)
         ttk.Button(self.left_frame, text="Choose a database", command=self.database.choose_db).pack(pady=5)
         ttk.Button(self.left_frame, text="Save database", command=self.database.save_db).pack(pady=5)
-        ttk.Button(self.left_frame, text="Save database as", command=self.create_table).pack(pady=5)
 
         clear_db_button = ttk.Button(self.left_frame, text="Clear the database", command=self.clear_database)
         clear_db_button.pack(pady=5)
         self.table_name_entry_clear = ttk.Entry(self.left_frame)
         self.table_name_entry_clear.pack()
 
-        create_table_button = ttk.Button(self.left_frame, text="Create a table", command=self.database.create_table)
+        create_table_button = ttk.Button(self.left_frame, text="Create a table", command=self.create_table)
         create_table_button.pack(pady=5)
         self.table_name_entry_create = ttk.Entry(self.left_frame)
         self.table_name_entry_create.pack()
@@ -85,14 +84,15 @@ class App:
         else:
             self.append_log("Please enter a valid table name.")
 
+    # Method to create a table
     def create_table(self):
         table_name = self.table_name_entry_create.get()
         if table_name.strip():
-            self.database.create_table(table_name)
+            self.database.create_table(table_name)  # Pass the table_name here
             self.append_log(f"The table {table_name} was created successfully.")
         else:
             self.append_log("Please enter a valid table name.")
-
+            
     # Method to append a log entry
     def append_log(self, log_entry):
         self.log_display.insert(tk.END, log_entry + "\n")

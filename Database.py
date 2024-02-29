@@ -39,6 +39,12 @@ class Database:
         except Exception as e:
             self.logger.error(f"Error while creating the table {table_name}: {str(e)}")
         
+    # Function to check if a table exists in the database
+    def table_exists(self, table_name):
+        query = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'"
+        self.cursor.execute(query)
+        return bool(self.cursor.fetchone())
+        
     # Function to clear all tables in the database
     def clear_db(self):
         try:
@@ -63,7 +69,7 @@ class Database:
         if selected_file:
             self.db_path = selected_file
             self.connection = sqlite3.connect(self.db_path)
-            self.cursor = self.connection.cursor()
+            self.cursor = self.connection.cursor()  # Initialiser le curseur ici
             self.logger.info(f"The database {self.db_path} was chosen successfully.")
 
     # Function to save the database
@@ -80,8 +86,6 @@ class Database:
         try:
             response = requests.get(json_url)
             data = response.json()
-            columns = list(data[0].keys())
-            self.create_table(table_name, columns)
             for row in data:
                 values = list(row.values())
                 insert_query = f"INSERT INTO {table_name} VALUES ({', '.join(['?'] * len(values))})"
