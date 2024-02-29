@@ -4,6 +4,7 @@ from tkinter import filedialog
 import logging
 import requests
 from logging import Logger
+import pandas as pd
 
 
 # Class to handle the database
@@ -106,6 +107,24 @@ class Database:
         except ValueError:
             self.logger.error(f"The data from {json_url} is not in the expected format.")
 
+    # Function to get data from the database
+    def get_data(self, table_name):
+        try:
+            select_query = f"SELECT * FROM {table_name}"
+            self.cursor.execute(select_query)
+            data = self.cursor.fetchall()
+            self.logger.info(f"The data from the table {table_name} was retrieved successfully.")
+            # Convertir les données en DataFrame
+            df = pd.DataFrame(data, columns=[desc[0] for desc in self.cursor.description])
+            return df
+        except FileNotFoundError:
+            self.logger.error(f"The file {self.db_path} was not found.")
+            return pd.DataFrame()  # Retourner un DataFrame vide en cas d'erreur
+        except ValueError:
+            self.logger.error(f"None of the tables in the database match the name {table_name}.")
+            return pd.DataFrame()
+
+    # Function to drop a table from the database
     def drop_table(self, table_name):
         try:
             drop_table_query = f"DROP TABLE IF EXISTS {table_name}"
