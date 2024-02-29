@@ -1,10 +1,10 @@
 import tkinter as tk
-from tkinter import ttk, simpledialog
+from tkinter import simpledialog
 from Database import *
 from Plot import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
+import customtkinter as ctk
 
 class App:
     def __init__(self, root):
@@ -13,41 +13,42 @@ class App:
         self.root.geometry("900x650")
         self.database = Database()
         self.db_path = None
-        self.root.configure(background="#2D2A4A")
+        
+        ctk.set_default_color_theme("themes\\dark-blue.json")
 
         self.create_widgets()
 
     # Method to create the widgets
     def create_widgets(self):
-        self.left_frame = ttk.Frame(self.root, width=250, height=600, relief=tk.RIDGE)
+        self.left_frame = tk.Frame(self.root, width=250, height=600, relief=tk.RIDGE)
         self.left_frame.pack(side=tk.LEFT, padx=10, pady=10)
 
-        ttk.Button(self.left_frame, text="Create a database").pack(pady=5)
-        ttk.Button(self.left_frame, text="Choose a database", command=self.database.choose_db).pack(pady=5)
-        ttk.Button(self.left_frame, text="Save database", command=self.database.save_db).pack(pady=5)
+        ctk.CTkButton(self.left_frame, text="Create a database").pack(pady=5)
+        ctk.CTkButton(self.left_frame, text="Choose a database", command=self.database.choose_db).pack(pady=5)
+        ctk.CTkButton(self.left_frame, text="Save database", command=self.database.save_db).pack(pady=5)
 
-        clear_db_button = ttk.Button(self.left_frame, text="Clear the database", command=self.clear_database)
+        clear_db_button = ctk.CTkButton(self.left_frame, text="Clear the database", command=self.clear_database)
         clear_db_button.pack(pady=5)
 
-        create_table_button = ttk.Button(self.left_frame, text="Create a table", command=self.create_table)
+        create_table_button = ctk.CTkButton(self.left_frame, text="Create a table", command=self.create_table)
         create_table_button.pack(pady=5)
 
-        download_data_button = ttk.Button(self.left_frame, text="Download data", command=self.download_data)
+        download_data_button = ctk.CTkButton(self.left_frame, text="Download data", command=self.download_data)
         download_data_button.pack(pady=5)
 
-        drop_table_button = ttk.Button(self.left_frame, text="Drop table", command=self.drop_table)
+        drop_table_button = ctk.CTkButton(self.left_frame, text="Drop table", command=self.drop_table)
         drop_table_button.pack(pady=5)
 
-        ttk.Button(self.left_frame, text="Drop all tables", command=self.database.drop_all_tables).pack(pady=5)
-        ttk.Button(self.left_frame, text="Exit", command=self.root.quit).pack(pady=5)
+        ctk.CTkButton(self.left_frame, text="Drop all tables", command=self.database.drop_all_tables).pack(pady=5)
+        ctk.CTkButton(self.left_frame, text="Exit", command=self.root.quit).pack(pady=5)
 
-        self.plot_frame = ttk.Frame(self.root, width=600, height=600, relief=tk.RIDGE)
+        self.plot_frame = tk.Frame(self.root, width=600, height=600, relief=tk.RIDGE)
         self.plot_frame.pack(side=tk.RIGHT, padx=10, pady=10)
 
         self.log_display = tk.Text(self.plot_frame, height=10, width=60)
         self.log_display.pack()
 
-        plot_button = ttk.Button(self.plot_frame, text="Show the plots", command=self.show_plot)
+        plot_button = ctk.CTkButton(self.plot_frame, text="Show the plots", command=self.show_plot)
         plot_button.pack(pady=5)
 
     # Method to clear the database
@@ -102,7 +103,7 @@ class App:
             fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(12, 8))
 
             plot.bar_chart(data, "taille", "longueur", "Bar Chart", "Taille", "Longueur", ax=axes[0, 0])
-            plot.line_chart(data, "taille", "longueur", "Line Chart", "Taille", "Longueur", ax=axes[0, 1])  # Ajout de l'argument ax
+            plot.line_chart(data, "taille", "longueur", "Line Chart", "Taille", "Longueur", ax=axes[0, 1])
             plot.scatter_chart(data, "taille", "longueur", "Scatter Chart", "Taille", "Longueur", ax=axes[1, 0])
             plot.pie_chart(data, "taille", "Pie Chart", ax=axes[1, 1])
 
@@ -115,4 +116,3 @@ class App:
 
         else:
             self.append_log("No table name entered.")
-
