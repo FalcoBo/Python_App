@@ -83,19 +83,26 @@ class Database:
     # Method to download the data in the database
     def download_data(self, table_name):
         json_url = "https://jsonplaceholder.typicode.com/posts"
+
         try:
             response = requests.get(json_url)
-            data = response.json()
-            for row in data:
-                values = list(row.values())
-                insert_query = f"INSERT INTO {table_name} VALUES ({', '.join(['?'] * len(values))})"
-                self.cursor.execute(insert_query, values)
-            self.connection.commit()
-            self.logger.info(f"The data from {json_url} was downloaded and stored in the database successfully.")
+            if response.status_code == 200:
+                data = response.json()
+                
+                for row in data:
+                    values = [row.get(column) for column in ["taille", "nom", "etat", "longueur"]]
+                    insert_query = f"INSERT INTO {table_name} VALUES ({', '.join(['?'] * len(values))})"
+                    self.cursor.execute(insert_query, values)
+                
+                self.connection.commit()
+                self.logger.info(f"The data from {json_url} was downloaded and stored in the database successfully.")
+            else:
+                self.logger.error(f"Failed to download data from {json_url}. Status code: {response.status_code}")
+
         except FileNotFoundError:
             self.logger.error(f"The Database file {self.db_path} was not found.")
-        except requests.exceptions.RequestException:
-            self.logger.error(f"An error occurred while downloading the data from {json_url}.")
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"An error occurred while downloading the data from {json_url}: {e}")
         except ValueError:
             self.logger.error(f"The data from {json_url} is not in the expected format.")
 
