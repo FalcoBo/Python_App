@@ -22,7 +22,6 @@ class App:
     # Method to create the widgets
     def create_widgets(self):
         self.left_frame = tk.Frame(self.root, width=250, height=600, relief=tk.RIDGE)
-        self.left_frame.configure(background=None)
         self.left_frame.pack(side=tk.LEFT, padx=10, pady=10)
 
         ctk.CTkButton(self.left_frame, text="Create a database").pack(pady=5)
