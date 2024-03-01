@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import simpledialog
+from tkinter import IntVar
 from Database import *
 from Plot import *
 import matplotlib.pyplot as plt
@@ -13,7 +14,7 @@ class App:
         self.root.geometry("900x650")
         self.database = Database()
         self.db_path = None
-        
+
         ctk.set_default_color_theme("themes\\dark-blue.json")
 
         self.create_widgets()
@@ -21,6 +22,7 @@ class App:
     # Method to create the widgets
     def create_widgets(self):
         self.left_frame = tk.Frame(self.root, width=250, height=600, relief=tk.RIDGE)
+        self.left_frame.configure(background=None)
         self.left_frame.pack(side=tk.LEFT, padx=10, pady=10)
 
         ctk.CTkButton(self.left_frame, text="Create a database").pack(pady=5)
@@ -39,6 +41,12 @@ class App:
         drop_table_button = ctk.CTkButton(self.left_frame, text="Drop table", command=self.drop_table)
         drop_table_button.pack(pady=5)
 
+        # Stock the mode value
+        self.mode_var = IntVar()
+        self.mode_var.set(1)
+        dark_light_mode_button = ctk.CTkSwitch(self.left_frame, command=self.dark_light_mode, variable=self.mode_var)
+        dark_light_mode_button.pack(pady=5)
+
         ctk.CTkButton(self.left_frame, text="Drop all tables", command=self.database.drop_all_tables).pack(pady=5)
         ctk.CTkButton(self.left_frame, text="Exit", command=self.root.quit).pack(pady=5)
 
@@ -50,6 +58,14 @@ class App:
 
         plot_button = ctk.CTkButton(self.plot_frame, text="Show the plots", command=self.show_plot)
         plot_button.pack(pady=5)
+
+    # Method dark and light mode
+    def dark_light_mode(self):
+        value = self.mode_var.get()
+        if value == 0:
+            self.root.configure(background="white")
+        else:
+            self.root.configure(background="#2D2A4A")
 
     # Method to clear the database
     def clear_database(self):
