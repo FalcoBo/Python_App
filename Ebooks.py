@@ -12,7 +12,8 @@ class Ebooks:
         self.paragraph_lengths = None
 
     # Method to download a book from the Internet
-    def download_book(self, url):
+    def download_book(self):
+        url = 'https://www.gutenberg.org/files/1342/1342-h/1342-h.htm'
         response = requests.get(url)
         return response.text
 
