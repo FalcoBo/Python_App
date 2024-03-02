@@ -15,7 +15,7 @@ class App:
         self.root.geometry("900x650")
         self.database = Database(self)
         self.db_path = None
-        self.ebooks = Ebooks()
+        self.ebooks = Ebooks(self)
 
         ctk.set_default_color_theme("themes\\dark-blue.json")
 
@@ -68,7 +68,6 @@ class App:
         widgets = {}
 
         widgets["download_ebook_button"] = ctk.CTkButton(self.left_frame, text="Download Ebook", command=self.download_ebook)
-        widgets["extract_ebook_info_button"] = ctk.CTkButton(self.left_frame, text="Extract Ebook Info", command=self.extract_ebook_info)
         widgets["plot_paragraph_lengths_button"] = ctk.CTkButton(self.left_frame, text="Plot Paragraph Lengths", command=self.plot_paragraph_lengths)
         widgets["create_word_document_button"] = ctk.CTkButton(self.left_frame, text="Create Word Document", command=self.create_word_document)
 
@@ -171,12 +170,10 @@ class App:
 
     # Method to download an ebook
     def download_ebook(self):
-        url = simpledialog.askstring("Ebook Download", "Enter the URL of the ebook:")
-        if url:
-            html = self.ebooks.download_book(url)
-            self.append_log("Ebook downloaded successfully.")
-        else:
-            self.append_log("No URL entered.")
+        try:
+            self.ebooks.download_ebook()
+        except FileNotFoundError as e:
+            self.append_log(f"An error occurred: {str(e)}")
 
     # Method to extract the ebook info
     def extract_ebook_info(self):
