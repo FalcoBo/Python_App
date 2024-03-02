@@ -39,7 +39,8 @@ class Ebooks:
         plt.xlabel('Nombre de mots par paragraphe')
         plt.ylabel('Nombre de paragraphes')
         plt.title('Distribution des longueurs des paragraphes')
-        plt.show()
+        plt.savefig('distribution_paragraphes.png')
+        plt.close()
 
     # Method to download an image from the Internet
     def download_image(self, url, filename):
