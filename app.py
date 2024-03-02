@@ -1,62 +1,92 @@
 import tkinter as tk
 from tkinter import simpledialog
 from tkinter import IntVar
-from Database import *
+from Database import Database
 from Plot import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import customtkinter as ctk
+from Ebooks import Ebooks
 
 class App:
     def __init__(self, root):
         self.root = root
         self.root.title("My Application")
         self.root.geometry("900x650")
-        self.database = Database()
+        self.database = Database(self)
         self.db_path = None
+        self.ebooks = Ebooks()
 
         ctk.set_default_color_theme("themes\\dark-blue.json")
+
+        self.mode_var = IntVar(value=0)
 
         self.create_widgets()
 
     # Method to create the widgets
     def create_widgets(self):
-        self.left_frame = tk.Frame(self.root, width=250, height=600, relief=tk.RIDGE)
+        self.main_frame = tk.Frame(self.root)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.log_display = tk.Text(self.main_frame, height=10, width=50)
+        self.log_display.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+        self.left_frame = tk.Frame(self.main_frame, width=250, height=600, relief=tk.RIDGE)
         self.left_frame.pack(side=tk.LEFT, padx=10, pady=10)
 
-        ctk.CTkButton(self.left_frame, text="Create a database").pack(pady=5)
-        ctk.CTkButton(self.left_frame, text="Choose a database", command=self.database.choose_db).pack(pady=5)
-        ctk.CTkButton(self.left_frame, text="Save database", command=self.database.save_db).pack(pady=5)
+        self.database_button = tk.Button(self.left_frame, text="Database", command=self.show_database)
+        self.database_button.pack(side=tk.TOP, fill=tk.X)
 
-        clear_db_button = ctk.CTkButton(self.left_frame, text="Clear the database", command=self.clear_database)
-        clear_db_button.pack(pady=5)
+        self.ebooks_button = tk.Button(self.left_frame, text="Ebooks", command=self.show_ebooks)
+        self.ebooks_button.pack(side=tk.TOP, fill=tk.X)
 
-        create_table_button = ctk.CTkButton(self.left_frame, text="Create a table", command=self.create_table)
-        create_table_button.pack(pady=5)
+        self.database_widgets = self.create_database_widgets()
 
-        download_data_button = ctk.CTkButton(self.left_frame, text="Download data", command=self.download_data)
-        download_data_button.pack(pady=5)
+        self.ebooks_widgets = self.create_ebooks_widgets()
 
-        drop_table_button = ctk.CTkButton(self.left_frame, text="Drop table", command=self.drop_table)
-        drop_table_button.pack(pady=5)
+        self.show_database()
 
-        # Stock the mode value
-        self.mode_var = IntVar()
-        self.mode_var.set(1)
-        dark_light_mode_button = ctk.CTkSwitch(self.left_frame, command=self.dark_light_mode, variable=self.mode_var)
-        dark_light_mode_button.pack(pady=5)
+    # Method to create the database widgets
+    def create_database_widgets(self):
+        widgets = {}
 
-        ctk.CTkButton(self.left_frame, text="Drop all tables", command=self.database.drop_all_tables).pack(pady=5)
-        ctk.CTkButton(self.left_frame, text="Exit", command=self.root.quit).pack(pady=5)
+        widgets["create_database_button"] = ctk.CTkButton(self.left_frame, text="Create a database", command=self.create_database)
+        widgets["choose_database_button"] = ctk.CTkButton(self.left_frame, text="Choose a database", command=self.database.choose_db)
+        widgets["save_database_button"] = ctk.CTkButton(self.left_frame, text="Save database", command=self.database.save_db)
+        widgets["clear_db_button"] = ctk.CTkButton(self.left_frame, text="Clear the database", command=self.clear_database)
+        widgets["create_table_button"] = ctk.CTkButton(self.left_frame, text="Create a table", command=self.create_table)
+        widgets["download_data_button"] = ctk.CTkButton(self.left_frame, text="Download data", command=self.download_data)
+        widgets["drop_table_button"] = ctk.CTkButton(self.left_frame, text="Drop table", command=self.drop_table)
+        widgets["dark_light_mode_button"] = ctk.CTkSwitch(self.left_frame, command=self.dark_light_mode, variable=self.mode_var)
+        widgets["drop_all_tables_button"] = ctk.CTkButton(self.left_frame, text="Drop all tables", command=self.database.drop_all_tables)
+        widgets["exit_button"] = ctk.CTkButton(self.left_frame, text="Exit", command=self.root.quit)
 
-        self.plot_frame = tk.Frame(self.root, width=600, height=600, relief=tk.RIDGE)
-        self.plot_frame.pack(side=tk.RIGHT, padx=10, pady=10)
+        return widgets
 
-        self.log_display = tk.Text(self.plot_frame, height=10, width=60)
-        self.log_display.pack()
+    # Method to create the ebooks widgets
+    def create_ebooks_widgets(self):
+        widgets = {}
 
-        plot_button = ctk.CTkButton(self.plot_frame, text="Show the plots", command=self.show_plot)
-        plot_button.pack(pady=5)
+        widgets["download_ebook_button"] = ctk.CTkButton(self.left_frame, text="Download Ebook", command=self.download_ebook)
+        widgets["extract_ebook_info_button"] = ctk.CTkButton(self.left_frame, text="Extract Ebook Info", command=self.extract_ebook_info)
+        widgets["plot_paragraph_lengths_button"] = ctk.CTkButton(self.left_frame, text="Plot Paragraph Lengths", command=self.plot_paragraph_lengths)
+        widgets["create_word_document_button"] = ctk.CTkButton(self.left_frame, text="Create Word Document", command=self.create_word_document)
+
+        return widgets
+    
+    # Method to show the database
+    def show_database(self):
+        for widget in self.ebooks_widgets.values():
+            widget.pack_forget()
+        for widget in self.database_widgets.values():
+            widget.pack()
+
+    # Method to show the ebooks
+    def show_ebooks(self):
+        for widget in self.database_widgets.values():
+            widget.pack_forget()
+        for widget in self.ebooks_widgets.values():
+            widget.pack()
 
     # Method dark and light mode
     def dark_light_mode(self):
@@ -65,6 +95,11 @@ class App:
             self.root.configure(background="white")
         else:
             self.root.configure(background="#2D2A4A")
+
+    # Method to create a database
+    def create_database(self):
+        self.database.create_database()
+        self.append_log("Database created successfully.")
 
     # Method to clear the database
     def clear_database(self):
@@ -131,3 +166,41 @@ class App:
 
         else:
             self.append_log("No table name entered.")
+
+    # Methods for the Ebooks
+
+    # Method to download an ebook
+    def download_ebook(self):
+        url = simpledialog.askstring("Ebook Download", "Enter the URL of the ebook:")
+        if url:
+            html = self.ebooks.download_book(url)
+            self.append_log("Ebook downloaded successfully.")
+        else:
+            self.append_log("No URL entered.")
+
+    # Method to extract the ebook info
+    def extract_ebook_info(self):
+        if self.ebooks.book_title and self.ebooks.author_name and self.ebooks.first_chapter:
+            self.append_log("Book Info: ")
+            self.append_log(f"Title: {self.ebooks.book_title}")
+            self.append_log(f"Author: {self.ebooks.author_name}")
+            self.append_log(f"First Chapter: {self.ebooks.first_chapter}")
+        else:
+            self.append_log("Please download an ebook first.")
+
+    # Method to plot the paragraph lengths
+    def plot_paragraph_lengths(self):
+        if self.ebooks.first_chapter:
+            self.ebooks.count_paragraph_words()
+            self.ebooks.plot_paragraph_lengths()
+            self.append_log("Paragraph lengths plotted successfully.")
+        else:
+            self.append_log("Please download an ebook first.")
+
+    # Method to create a word document
+    def create_word_document(self):
+        if self.ebooks.book_title and self.ebooks.author_name and self.ebooks.first_chapter:
+            self.ebooks.create_word_document("ebook_document.docx")
+            self.append_log("Word document created successfully.")
+        else:
+            self.append_log("Please download an ebook first.")
