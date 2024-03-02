@@ -52,7 +52,6 @@ class Ebooks:
 
     # Method to rotate and paste an image
     def rotate_and_paste_image(self, image_path1, image_path2, output_path, angle):
-        # Code pour lire, faire pivoter et coller les images
         pass
 
     # Method to create a Word document
@@ -63,7 +62,7 @@ class Ebooks:
         doc.add_picture('image1.jpg', width=Document().page_width)
         doc.add_heading('Auteur du rapport : Votre nom', level=2)
         doc.add_page_break()
-        
+
         doc.add_heading('Distribution des longueurs des paragraphes', level=1)
         doc.add_paragraph('Description de l\'image : explication de l\'intrigue...')
         self.plot_paragraph_lengths()
