@@ -174,7 +174,6 @@ class Database:
             self.app.append_log(f"The file {self.db_path} was not found.", error=True)
 
     # Methode to drop all tables from the database
-    @staticmethod
     def drop_all_tables(self):
         try:
             self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
