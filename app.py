@@ -87,7 +87,6 @@ class App:
     # Method to set the database path
     def set_db_path(self, db_path):
         self.db_path = db_path
-        self.append_log(f"Database chosen: {db_path}")
 
     # Method to choose the database
     def choose_db(self):
