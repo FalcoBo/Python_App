@@ -40,9 +40,15 @@ class App:
         self.ebooks_button = tk.Button(self.left_frame, text="Ebooks", command=self.show_ebooks)
         self.ebooks_button.pack(side=tk.TOP, fill=tk.X)
 
+        self.dark_light = ctk.CTkSwitch(self.left_frame, command=self.dark_light_mode, variable=self.mode_var)
+        self.dark_light.pack(side=tk.TOP, fill=tk.X)
+
         self.database_widgets = self.create_database_widgets()
 
         self.ebooks_widgets = self.create_ebooks_widgets()
+
+        self.exit_button = ctk.CTkButton(self.left_frame, text="Exit", command=self.root.quit)
+        self.exit_button.pack(side=tk.BOTTOM, fill=tk.X)
 
         self.show_database()
 
@@ -51,15 +57,17 @@ class App:
         widgets = {}
 
         widgets["create_database_button"] = ctk.CTkButton(self.left_frame, text="Create a database", command=self.create_database)
-        widgets["choose_database_button"] = ctk.CTkButton(self.left_frame, text="Choose a database", command=self.database.choose_db)
+        widgets["choose_database_button"] = ctk.CTkButton(self.left_frame, text="Choose a database", command=self.choose_db)
         widgets["save_database_button"] = ctk.CTkButton(self.left_frame, text="Save database", command=self.database.save_db)
         widgets["clear_db_button"] = ctk.CTkButton(self.left_frame, text="Clear the database", command=self.clear_database)
         widgets["create_table_button"] = ctk.CTkButton(self.left_frame, text="Create a table", command=self.create_table)
         widgets["download_data_button"] = ctk.CTkButton(self.left_frame, text="Download data", command=self.download_data)
         widgets["drop_table_button"] = ctk.CTkButton(self.left_frame, text="Drop table", command=self.drop_table)
-        widgets["dark_light_mode_button"] = ctk.CTkSwitch(self.left_frame, command=self.dark_light_mode, variable=self.mode_var)
         widgets["drop_all_tables_button"] = ctk.CTkButton(self.left_frame, text="Drop all tables", command=self.database.drop_all_tables)
-        widgets["exit_button"] = ctk.CTkButton(self.left_frame, text="Exit", command=self.root.quit)
+        widgets["show_plot_button"] = ctk.CTkButton(self.left_frame, text="Show plot", command=self.show_plot)
+
+        for widget in widgets.values():
+            widget.pack(side=tk.TOP, fill=tk.X, pady=5)
 
         return widgets
 
@@ -71,8 +79,24 @@ class App:
         widgets["plot_paragraph_lengths_button"] = ctk.CTkButton(self.left_frame, text="Plot Paragraph Lengths", command=self.plot_paragraph_lengths)
         widgets["create_word_document_button"] = ctk.CTkButton(self.left_frame, text="Create Word Document", command=self.create_word_document)
 
+        for widget in widgets.values():
+            widget.pack(side=tk.TOP, fill=tk.X, pady=5)
+
         return widgets
-    
+
+    # Method to set the database path
+    def set_db_path(self, db_path):
+        self.db_path = db_path
+        self.append_log(f"Database chosen: {db_path}")
+
+    # Method to choose the database
+    def choose_db(self):
+        db_path = self.database.choose_db()
+        print(db_path)
+        if db_path:
+            self.set_db_path(db_path)
+            print(db_path)
+
     # Method to show the database
     def show_database(self):
         for widget in self.ebooks_widgets.values():
@@ -97,17 +121,24 @@ class App:
 
     # Method to create a database
     def create_database(self):
+        self.db_path = None
         self.database.create_database()
         self.append_log("Database created successfully.")
 
     # Method to clear the database
     def clear_database(self):
+        if self.db_path == None:
+            self.append_log("Please choose a database first.")
+            return
         table_name = simpledialog.askstring("Table Selection", "Enter table name:")
         self.database.clear_db(table_name)
         self.append_log(f"The database {table_name} was cleared successfully.")
 
     # Method to download the data
     def download_data(self):
+        if self.db_path == None:
+            self.append_log("Please choose a database first.")
+            return
         table_name = simpledialog.askstring("Table Selection", "Enter table name:")
         if not table_name.strip():
             self.append_log("Please enter a valid table name.")
@@ -117,6 +148,9 @@ class App:
 
     # Method to drop a table
     def drop_table(self):
+        if self.db_path == None:
+            self.append_log("Please choose a database first.")
+            return
         table_name = simpledialog.askstring("Table Selection", "Enter table name:")
         if table_name.strip():
             self.database.drop_table(table_name)
@@ -126,21 +160,27 @@ class App:
 
     # Method to create a table
     def create_table(self):
+        if self.db_path == None:
+            self.append_log("Please choose a database first.")
+            return
         table_name = simpledialog.askstring("Table Selection", "Enter table name:")
         if table_name is not None and table_name.strip():
             self.database.create_table(table_name)
             self.append_log(f"The table {table_name} was created successfully.")
-        elif table_name is not None:
+        elif table_name is None:
             self.append_log("Please enter a valid table name.")
 
     # Method to append a log entry
-    def append_log(self, log_entry):
+    def append_log(self, log_entry, error=False):
         self.log_display.insert(tk.END, log_entry + "\n")
         self.log_display.see(tk.END)
         self.log_display.update()
 
     # Method to show the plot
     def show_plot(self):
+        if self.db_path == None:
+            self.append_log("Please choose a database first.")
+            return
         table_name = simpledialog.askstring("Table Selection", "Enter table name:")
         if table_name:
             data = self.database.get_data(table_name)
@@ -165,6 +205,7 @@ class App:
 
         else:
             self.append_log("No table name entered.")
+
 
     # Methods for the Ebooks
 

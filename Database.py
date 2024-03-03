@@ -62,7 +62,6 @@ class Database:
         return bool(self.cursor.fetchone())
         
     # Method to clear the database
-    @staticmethod
     def clear_db(self):
         try:
             self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -87,26 +86,31 @@ class Database:
             if selected_file:
                 self.db_path = selected_file
                 self.connection = sqlite3.connect(self.db_path)
-                self.cursor = self.connection.cursor()  # Initialiser le curseur ici
+                self.cursor = self.connection.cursor()
                 self.logger.info(f"The database {self.db_path} was chosen successfully.")
                 self.app.append_log(f"The database {self.db_path} was chosen successfully.")
+                return self.db_path  # Ajouter cette ligne pour retourner le chemin de la base de données
         except Exception as e:
             self.logger.error(f"Error while choosing the database: {str(e)}")
-            
             self.app.append_log(f"Error while choosing the database: {str(e)}", error=True)
+        return None
 
     # Method to save the database
-    def save_db(self, source, destination):
+    def save_db(self):
+        destination = "./test/"
         try:
-            shutil.copy(source, destination)
-            self.logger.info("The database was saved successfully.")
-            self.app.append_log("The database was saved successfully.")
+            shutil.copy(self.db_path, destination)
+            self.logger.info(f"The database {self.db_path} was saved successfully to {destination}.")
+            self.app.append_log(f"The database {self.db_path} was saved successfully to {destination}.")
+        except FileNotFoundError:
+            self.logger.error(f"The file {self.db_path} was not found.")
+            self.app.append_log(f"The file {self.db_path} was not found.", error=True)
         except Exception as e:
             self.logger.error(f"Error while saving the database: {str(e)}")
             self.app.append_log(f"Error while saving the database: {str(e)}", error=True)
 
+
     # Method to download the data in the database
-    @staticmethod
     def download_data(self, table_name):
         json_url = "https://jsonplaceholder.typicode.com/posts"
 
@@ -138,7 +142,6 @@ class Database:
             self.app.append_log(f"The data from {json_url} is not in the expected format.", error=True)
 
     # Method to get the data from the database
-    @staticmethod
     def get_data(self, table_name):
         try:
             select_query = f"SELECT * FROM {table_name}"
@@ -158,7 +161,6 @@ class Database:
             return pd.DataFrame()
 
     # Method to drop a table from the database
-    @staticmethod
     def drop_table(self, table_name):
         try:
             drop_table_query = f"DROP TABLE IF EXISTS {table_name}"
@@ -190,7 +192,6 @@ class Database:
             self.app.append_log(f"The file {self.db_path} was not found.", error=True)
 
     # Methode to close the database
-    @staticmethod
     def close_db(self):
         try:
             self.connection.close()
